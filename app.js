@@ -1,14 +1,15 @@
 import fs from 'fs';
 import {Transform} from 'stream';
 
-function pipe(inputFilePath, outputFilePath, operation) {
-    const fileStream = fs.createReadStream(inputFilePath);
-    const transformedData = fs.createWriteStream(outputFilePath);
+function pipe() {
+    const fileStream = fs.createReadStream( process.argv[2].toString());
+    const transformedData = fs.createWriteStream(process.argv[3].toString());
     let hasError = false;
 
     if(process.argv.length!== 5){
-        console.log(process.argv.length)
         console.log('The function requires 3 arguments');
+        console.log('It should look like this: inputFilePath, outputFilePath, pipeName')
+        transformedData.end();
         return;
     }
 
@@ -24,7 +25,7 @@ function pipe(inputFilePath, outputFilePath, operation) {
             if (hasError) {
                 return;
             }
-            switch (operation) {
+            switch (process.argv[4].toString()) {
                 case 'uppercase':
                     chunk = chunk.toString().toUpperCase();
                     break;
@@ -57,4 +58,4 @@ function pipe(inputFilePath, outputFilePath, operation) {
     fileStream.pipe(transformStream).pipe(transformedData);
 }
 
-pipe(process.argv[2].toString(),process.argv[3].toString(),process.argv[4].toString())
+pipe()
